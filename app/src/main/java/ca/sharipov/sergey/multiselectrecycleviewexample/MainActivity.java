@@ -7,37 +7,22 @@ import android.support.v7.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ItemsFragment mItemsFragment;
-    private FragmentManager mFragmentManager;
-
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        initFragment(savedInstanceState);
+        initFragment();
     }
 
-    private void initFragment(Bundle savedInstanceState) {
-        mFragmentManager = getSupportFragmentManager();
+    private void initFragment() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        ItemsFragment itemsFragment = (ItemsFragment) fragmentManager.findFragmentById(R.id.fragment_container);
 
-        if (savedInstanceState != null)
-            mItemsFragment = (ItemsFragment) mFragmentManager.getFragment(savedInstanceState, ItemsFragment.class.getName());
-
-        if (mItemsFragment == null)
-            mItemsFragment = new ItemsFragment();
-
-        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-        if (savedInstanceState == null) {
-            fragmentTransaction.add(R.id.fragment_container, mItemsFragment, ItemsFragment.class.getName());
-        } else {
-            fragmentTransaction.replace(R.id.fragment_container, mItemsFragment, ItemsFragment.class.getName());
+        if (itemsFragment == null) {
+            itemsFragment = new ItemsFragment();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.add(R.id.fragment_container, itemsFragment, ItemsFragment.class.getName());
+            fragmentTransaction.commit();
         }
-        fragmentTransaction.commit();
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        mFragmentManager.putFragment(outState, ItemsFragment.class.getName(), mItemsFragment);
     }
 }
